@@ -184,3 +184,50 @@ function updateAll() {
 updateAll();
 setInterval(updateAll, 1000);
 
+function getBreakEndDate() {
+    const now = new Date();
+    // November 3. (exclusive)
+    return new Date(now.getFullYear(), 10, 3);
+}
+
+function updateRemainingBreak() {
+    const now = new Date();
+    const breakStart = new Date(now.getFullYear(), 9, 23);
+    const breakEnd = getBreakEndDate();
+
+    const box = document.getElementById("remaining-break-box");
+    const text = document.getElementById("remaining-break-text");
+
+    if (now >= breakStart && now < breakEnd) {
+        // ========= SZÜNET VAN =========
+        box.style.display = "block"; 
+
+        const diff = breakEnd - now;
+        const totalSeconds = Math.floor(diff / 1000);
+
+        const d = Math.floor(totalSeconds / (3600 * 24));
+        const h = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = totalSeconds % 60;
+
+        text.innerHTML = `
+            A szünetből még hátravan:
+            <br><span class="number">${formatNumber(d)}</span> nap,
+            <span class="number">${formatNumber(h)}</span> óra,
+            <span class="number">${formatNumber(m)}</span> perc,
+            <span class="number">${formatNumber(s)}</span> másodperc.
+        `;
+
+    } else {
+        // ========= NINCS SZÜNET =========
+        box.style.display = "none";
+    }
+}
+
+updateRemainingBreak();
+function updateAll() {
+    const target = getTargetDate();
+    updateMainCounter(target);
+    updateDetailedBox(target);
+    updateRemainingBreak();   // <--- ÚJ
+}
