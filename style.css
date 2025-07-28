@@ -1,28 +1,27 @@
-      /* Global styles based on user's provided CSS */
-        html, body {
-            overflow-x: hidden;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-        }
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+  margin: 0;
+  padding: 0;
+}
 
-        body {
-            height: 100vh;
-            /* Őszi háttérkép */
-            background-image: url(kep.jpg);
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Inter', sans-serif; /* Changed to Inter as per instructions */
-        }
+body {
+  height: 100vh;
+  background-image: url(kep.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+}
 
-        /* Counter and other elements CSS */
-        #counter {
+ #counter {
             background-color: rgba(255, 165, 0, 0.9); /* Autumn orange */
             padding: 40px 80px;
             border-radius: 20px;
@@ -31,117 +30,167 @@
             color: #4a2c0f; /* Dark brown for text */
             text-align: center;
             margin-bottom: 20px; /* Added margin for spacing */
+            max-width: 90%; /* Ensure it doesn't overflow */
+            box-sizing: border-box; /* Include padding in width calculation */
         }
+#counter span {
+  display: inline-block;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
 
-        #counter span {
-            display: inline-block;
-            opacity: 1;
-            transition: opacity 0.5s ease-in-out;
-            font-variant-numeric: tabular-nums; /* Added for stable digit width */
-        }
-
-        #countdown-box {
+ #countdown-box {
             margin-top: 20px;
             background-color: rgba(255, 255, 255, 0.2);
             padding: 25px 60px;
             border-radius: 20px;
             font-size: 2.3rem;
-            color: #f9f9f9;
+            color: #000000;
             backdrop-filter: blur(4px);
             text-align: center;
             margin-bottom: 40px; /* Added margin for spacing */
+            max-width: 90%; /* Ensure it doesn't overflow */
+            box-sizing: border-box;
         }
+.fade-out {
+  opacity: 0;
+}
 
-        #countdown-box span {
-            font-variant-numeric: tabular-nums; /* Added for stable digit width */
-        }
+.hourglass {
+  position: relative;
+  width: 60px;
+  height: 100px;
+  margin-top: 40px;
+  border: 4px solid white;
+  border-radius: 10px;
+  animation: rotateHourglass 4s infinite linear;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-        .fade-out {
-            opacity: 0;
-        }
+.top-sand, .bottom-sand {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+}
 
-        .hourglass {
-            position: relative;
-            width: 60px;
-            height: 100px;
-            margin-top: 40px;
-            border: 4px solid white;
-            border-radius: 10px;
-            animation: rotateHourglass 4s infinite linear;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+.top-sand {
+  border-bottom: 20px solid #ffcc66;
+  top: 10px;
+  animation: topSandFlow 2s infinite;
+}
 
-        .top-sand, .bottom-sand {
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-        }
+.neck {
+  width: 4px;
+  height: 20px;
+  background-color: #ffcc66;
+  animation: neckFlow 2s infinite;
+}
 
-        .top-sand {
-            border-bottom: 20px solid #ffcc66;
-            top: 10px;
-            animation: topSandFlow 2s infinite;
-        }
+.bottom-sand {
+  border-top: 20px solid #ffcc66;
+  bottom: 10px;
+  animation: bottomSandFill 2s infinite;
+}
 
-        .neck {
-            width: 4px;
-            height: 20px;
-            background-color: #ffcc66;
-            animation: neckFlow 2s infinite;
-        }
+@keyframes rotateHourglass {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
 
-        .bottom-sand {
-            border-top: 20px solid #ffcc66;
-            bottom: 10px;
-            animation: bottomSandFill 2s infinite;
-        }
+@keyframes topSandFlow {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
 
-        @keyframes rotateHourglass {
-            0% { transform: rotate(0deg); }
-            50% { transform: rotate(180deg); }
-            100% { transform: rotate(360deg); }
-        }
+@keyframes neckFlow {
+  0% { height: 20px; }
+  50% { height: 5px; }
+  100% { height: 20px; }
+}
 
-        @keyframes topSandFlow {
-            0% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 1; }
-        }
+@keyframes bottomSandFill {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
 
-        @keyframes neckFlow {
-            0% { height: 20px; }
-            50% { height: 5px; }
-            100% { height: 20px; }
-        }
+.sun {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  width: 80px;
+  height: 80px;
+  background: yellow;
+  border-radius: 50%;
+  box-shadow: 0 0 30px 10px yellow;
+  z-index: 10;
+}
 
-        @keyframes bottomSandFill {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
-        }
+.cloud {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.6;
+}
 
-        /* Removed summer-specific animations (sun, clouds, birds) */
+.cloud1 {
+  width: 100px;
+  height: 60px;
+  top: 80px;
+  left: -120px;
+  animation: moveCloud 60s linear infinite;
+  animation-delay: 0s;
+}
 
-        @media screen and (max-width: 600px) {
-            #counter {
-                padding: 20px 30px;
-                font-size: 2rem;
-            }
+.cloud2 {
+  width: 140px;
+  height: 80px;
+  top: 140px;
+  left: -180px;
+  animation: moveCloud 60s linear infinite;
+  animation-delay: 30s;
+}
 
-            #countdown-box {
-                font-size: 1rem;
-                padding: 15px 20px;
-            }
+@keyframes moveCloud {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(100vw + 200px)); }
+}
 
-            .hourglass {
-                width: 40px;
-                height: 70px;
-            }
-        }
+.bird {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border-top: 3px solid white;
+  border-left: 3px solid white;
+  transform: rotate(45deg);
+}
+
+.bird1 {
+  top: 130px;
+  left: -50px;
+  animation: flyBird 15s linear infinite;
+  animation-delay: 0s;
+}
+
+.bird2 {
+  top: 160px;
+  left: -80px;
+  animation: flyBird 15s linear infinite;
+  animation-delay: 7s;
+}
+
+@keyframes flyBird {
+  0% { transform: translateX(0) rotate(45deg); }
+  100% { transform: translateX(calc(100vw + 50px)) rotate(45deg); }
+}
+
 
         .total-countdown-box {
             position: fixed;
@@ -155,80 +204,59 @@
             font-size: 16px;
             line-height: 1.6;
             z-index: 100;
+            box-sizing: border-box;
         }
 
-        .total-countdown-box p {
-            margin: 4px 0;
-            font-weight: bold;
-        }
 
-        .total-countdown-box p span {
-            font-variant-numeric: tabular-nums; /* Added for stable digit width */
-        }
+.total-countdown-box p {
+  margin: 4px 0;
+  font-weight: bold;
+}
 
-        @media (max-width: 1000px) {
-            .total-countdown-box {
-                font-size: 20px;
-                padding: 25px;
-            }
+.summer-animation {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: 5;
+}
 
-            .total-countdown-box p {
-                font-size: 26px;
-            }
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+}
 
-            #counter,
-            #countdown-box {
-                font-size: 32px;
-                padding: 20px;
-            }
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  opacity: 0.8;
+  animation: confetti-fall 4s linear infinite;
+}
 
-            #counter span,
-            #countdown-box span {
-                font-size: 60px;
-            }
+@keyframes confetti-fall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
 
-            .hourglass {
-                width: 70px;
-                height: 120px;
-                margin-top: 30px;
-            }
-        }
-
-        .confetti-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 99; /* Below countdown boxes */
-        }
-
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            opacity: 0.8;
-            animation: confetti-fall 4s linear infinite;
-        }
-
-        @keyframes confetti-fall {
-            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-
-        /* Footer links container */
-        .footer-links-container {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            z-index: 100;
-            display: flex; /* For horizontal layout on desktop */
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
-            gap: 10px; /* Space between links */
-        }
-  .footer-link {
+.footer-links-container {
+  position: relative;
+  bottom: 20px;
+  left: 20px;
+  z-index: 100;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding: 20px;
+}
+.footer-link {
             position: absolute;
             bottom: 20px;
             left: 20px;
@@ -245,15 +273,71 @@
         .footer-link:hover {
             background-color: rgba(0, 0, 0, 0.7);
         }
+/* Mobil optimalizálás */
+@media screen and (max-width: 600px) {
+  #counter {
+    padding: 20px 30px;
+    font-size: 2rem;
+  }
 
-        @media screen and (max-width: 1000px) {
-            .footer-links-container {
-                flex-direction: column; /* Stack links vertically on mobile */
-                align-items: flex-start; /* Align links to the left */
-            }
-            .footer-link {
-                font-size: 1.2rem; /* Adjusted font size for better readability on mobile */
-                padding: 10px 15px;
-            }
-        }
+  #countdown-box {
+    font-size: 1rem;
+    padding: 15px 20px;
+  }
+
+  .hourglass {
+    width: 40px;
+    height: 70px;
+  }
+
+  .sun {
+    width: 100px;
+    height: 100px;
+    top: 20px;
+    right: 20px;
+  }
+
+  .cloud1 {
+    width: 160px;
+    height: 90px;
+    top: 150px;
+    left: -180px;
+  }
+
+  .cloud2 {
+    width: 200px;
+    height: 110px;
+    top: 220px;
+    left: -230px;
+  }
+
+  .bird {
+    width: 25px;
+    height: 25px;
+    border-top: 4px solid white;
+    border-left: 4px solid white;
+  }
+
+  .bird1 {
+    top: 300px;
+    left: -80px;
+  }
+
+  .bird2 {
+    top: 240px;
+    left: -120px;
+  }
+
+  .total-countdown-box {
+    font-size: 14px;
+    padding: 16px;
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .footer-link {
+    font-size: 1.3rem;
+    padding: 8px 12px;
+  }
+}
     
