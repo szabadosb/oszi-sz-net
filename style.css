@@ -1,4 +1,4 @@
-  /* Global styles based on user's provided CSS */
+      /* Global styles based on user's provided CSS */
         html, body {
             overflow-x: hidden;
             width: 100%;
@@ -42,11 +42,11 @@
 
         #countdown-box {
             margin-top: 20px;
-            background-color: rgba(255, 255, 255, 0.5);
+            background-color: rgba(255, 255, 255, 0.2);
             padding: 25px 60px;
             border-radius: 20px;
             font-size: 2.3rem;
-            color: #0a0edb;
+            color: #f9f9f9;
             backdrop-filter: blur(4px);
             text-align: center;
             margin-bottom: 40px; /* Added margin for spacing */
@@ -218,7 +218,17 @@
             100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
         }
 
-        .footer-link {
+        /* Footer links container */
+        .footer-links-container {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex; /* For horizontal layout on desktop */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            gap: 10px; /* Space between links */
+        }
+  .footer-link {
             position: absolute;
             bottom: 20px;
             left: 20px;
@@ -237,9 +247,13 @@
         }
 
         @media screen and (max-width: 1000px) {
+            .footer-links-container {
+                flex-direction: column; /* Stack links vertically on mobile */
+                align-items: flex-start; /* Align links to the left */
+            }
             .footer-link {
-                font-size: 2.9rem;
+                font-size: 1.2rem; /* Adjusted font size for better readability on mobile */
                 padding: 10px 15px;
             }
         }
-   
+    
