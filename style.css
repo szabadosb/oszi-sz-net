@@ -54,10 +54,10 @@ body {
         }
 
 .number, .total-countdown-box span, #detailed-countdown .number {
-            font-family: 'Barlow Mono', monospace;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
+      font-family: 'Courier New', monospace;
+      font-weight: 670;
+      letter-spacing: 0.5px;
+    }
 .fade-out {
   opacity: 0;
 }
