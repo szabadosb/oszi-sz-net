@@ -52,6 +52,12 @@ body {
             max-width: 90%; /* Ensure it doesn't overflow */
             box-sizing: border-box;
         }
+
+.number, .total-countdown-box span, #detailed-countdown .number {
+            font-family: 'Barlow Mono', monospace;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
 .fade-out {
   opacity: 0;
 }

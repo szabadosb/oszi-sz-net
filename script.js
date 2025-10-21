@@ -136,11 +136,11 @@
 
             counterEl.classList.add('fade-out');
             setTimeout(() => {
-                counterEl.textContent = `${diffInSeconds.toLocaleString()} másodperc van hátra az őszi szünetig!`;
+                counterEl.innerHTML = `<span class="number">${diffInSeconds.toLocaleString()}</span> másodperc van hátra az őszi szünetig!`;
                 counterEl.classList.remove('fade-out');
             }, 250);
 
-            detailedEl.textContent = `Ez pontosan ${Math.floor(diffInSeconds / (3600 * 24))} nap, ${Math.floor((diffInSeconds % (3600 * 24)) / 3600)} óra, ${Math.floor((diffInSeconds % 3600) / 60)} perc, ${diffInSeconds % 60} másodperc.`;
+            detailedEl.innerHTML = `Ez pontosan <span class="number">${Math.floor(diffInSeconds / (3600 * 24))}</span> nap, <span class="number">${Math.floor((diffInSeconds % (3600 * 24)) / 3600)}</span> óra, <span class="number">${Math.floor((diffInSeconds % 3600) / 60)}</span> perc, <span class="number">${diffInSeconds % 60}</span> másodperc.`;
         }
 
         function updateDetailedBox(target) {
