@@ -24,7 +24,7 @@ function getTargetDate() {
 
 // Format numbers: currently return plain string without thousands separators
 function formatNumber(n) {
-    return String(n);
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
 function getMonthDiff(startDate, endDate) {
