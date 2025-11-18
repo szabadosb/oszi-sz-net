@@ -203,36 +203,23 @@ body {
             background-color: rgba(0, 0, 0, 0.7);
         }
 /* Mobil optimalizálás */
-@media screen and (max-width: 700px) {
-  #counter {
-    padding: 20px 30px;
-    font-size: 2rem;
-  }
+@media screen and (max-width: 1000px) {
+    /* ... (egyéb meglévő szabályok) ... */
 
-  #countdown-box {
-    font-size: 1rem;
-    padding: 15px 20px;
-  }
+    .footer-link {
+        font-size: 2.9rem; /* Nagyobb betűméret */
+        padding: 10px 15px; /* Nagyobb belső tér */
+        gap: 0.5em; /* keep gap proportional */
+    }
 
-  .hourglass {
-    width: 40px;
-    height: 70px;
-  }
+    .footer-link img {
+        height: 1.05em; /* scale with larger text */
+    }
 
-  
-
-  .total-countdown-box {
-    font-size: 14px;
-    padding: 16px;
-    bottom: 20px;
-    right: 20px;
-  }
-
-  .footer-link {
-    font-size: 2.9rem;
-    padding: 8px 12px;
-  }
-}
+    .footer-link:hover {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+}í
     
 #remaining-break-box {
     margin-top: 20px;
