@@ -7,220 +7,308 @@ html, body {
 }
 
 body {
-  height: 100vh;
-  background-image: url(kep.jpg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Inter', sans-serif;
+    height: 100vh;
+    background-image: url(kep.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Inter', sans-serif;
 }
 
- #counter {
-            background-color: rgba(255, 165, 0, 0.9); /* Autumn orange */
-            padding: 40px 80px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            font-size: 3rem;
-            color: #4a2c0f; /* Dark brown for text */
-            text-align: center;
-            margin-bottom: 20px; /* Added margin for spacing */
-            max-width: 90%; /* Ensure it doesn't overflow */
-            box-sizing: border-box; /* Include padding in width calculation */
-        }
+#counter {
+    background-color: rgba(255, 165, 0, 0.9);
+    padding: 40px 80px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    font-size: 3rem;
+    color: #4a2c0f;
+    text-align: center;
+    margin-bottom: 20px;
+    max-width: 90%;
+    box-sizing: border-box;
+}
+
 #counter span {
-  display: inline-block;
-  opacity: 1;
-  transition: opacity 0.5s ease-in-out;
+    display: inline-block;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
 }
 
- #countdown-box {
-            margin-top: 20px;
-            background-color: rgba(255, 255, 255, 0.2);
-            padding: 25px 60px;
-            border-radius: 20px;
-            font-size: 2.3rem;
-            color: #000000;
-            backdrop-filter: blur(4px);
-            text-align: center;
-            margin-bottom: 40px; /* Added margin for spacing */
-            max-width: 90%; /* Ensure it doesn't overflow */
-            box-sizing: border-box;
-        }
+#countdown-box {
+    margin-top: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 25px 60px;
+    border-radius: 20px;
+    font-size: 2.3rem;
+    color: #000000;
+    backdrop-filter: blur(4px);
+    text-align: center;
+    margin-bottom: 40px;
+    max-width: 90%;
+    box-sizing: border-box;
+}
 
-.number, .total-countdown-box span, #detailed-countdown .number {
-      font-family: 'Courier New', monospace;
-      font-weight: 670;
-      letter-spacing: 0.5px;
-    }
 .fade-out {
-  opacity: 0;
+    opacity: 0;
 }
 
 .hourglass {
-  position: relative;
-  width: 60px;
-  height: 100px;
-  margin-top: 40px;
-  border: 4px solid white;
-  border-radius: 10px;
-  animation: rotateHourglass 4s infinite linear;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    position: relative;
+    width: 60px;
+    height: 100px;
+    margin-top: 40px;
+    border: 4px solid white;
+    border-radius: 10px;
+    animation: rotateHourglass 4s infinite linear;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .top-sand, .bottom-sand {
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
 }
 
 .top-sand {
-  border-bottom: 20px solid #ffcc66;
-  top: 10px;
-  animation: topSandFlow 2s infinite;
+    border-bottom: 20px solid #ffcc66;
+    top: 10px;
+    animation: topSandFlow 2s infinite;
 }
 
 .neck {
-  width: 4px;
-  height: 20px;
-  background-color: #ffcc66;
-  animation: neckFlow 2s infinite;
+    width: 4px;
+    height: 20px;
+    background-color: #ffcc66;
+    animation: neckFlow 2s infinite;
 }
 
 .bottom-sand {
-  border-top: 20px solid #ffcc66;
-  bottom: 10px;
-  animation: bottomSandFill 2s infinite;
+    border-top: 20px solid #ffcc66;
+    bottom: 10px;
+    animation: bottomSandFill 2s infinite;
 }
 
 @keyframes rotateHourglass {
-  0% { transform: rotate(0deg); }
-  50% { transform: rotate(180deg); }
-  100% { transform: rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(180deg); }
+    100% { transform: rotate(360deg); }
 }
 
 @keyframes topSandFlow {
-  0% { opacity: 1; }
-  50% { opacity: 0; }
-  100% { opacity: 1; }
+    0% { opacity: 1; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
 }
 
 @keyframes neckFlow {
-  0% { height: 20px; }
-  50% { height: 5px; }
-  100% { height: 20px; }
+    0% { height: 20px; }
+    50% { height: 5px; }
+    100% { height: 20px; }
 }
 
 @keyframes bottomSandFill {
-  0% { opacity: 0; }
-  50% { opacity: 1; }
-  100% { opacity: 0; }
+    0% { opacity: 0; }
+    50% { opacity: 1; }
+    100% { opacity: 0; }
 }
 
+.sun {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    width: 80px;
+    height: 80px;
+    background: yellow;
+    border-radius: 50%;
+    box-shadow: 0 0 30px 10px yellow;
+    z-index: 10;
+}
 
+.cloud {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.6;
+}
 
+.cloud1 {
+    width: 100px;
+    height: 60px;
+    top: 80px;
+    left: -120px;
+    animation: moveCloud 60s linear infinite;
+    animation-delay: 0s;
+}
 
-        .total-countdown-box {
-            position: fixed;
-            bottom: 40px;
-            right: 40px;
-            background-color: rgba(139, 69, 19, 0.8); /* Autumn brown */
-            padding: 16px;
-            border-radius: 16px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            font-family: 'Inter', sans-serif; /* Changed to Inter */
-            font-size: 16px;
-            line-height: 1.6;
-            z-index: 100;
-            box-sizing: border-box;
-        }
+.cloud2 {
+    width: 140px;
+    height: 80px;
+    top: 140px;
+    left: -180px;
+    animation: moveCloud 60s linear infinite;
+    animation-delay: 30s;
+}
 
+@keyframes moveCloud {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(100vw + 200px)); }
+}
+
+.bird {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: transparent;
+    border-top: 3px solid white;
+    border-left: 3px solid white;
+    transform: rotate(45deg);
+}
+
+.bird1 {
+    top: 130px;
+    left: -50px;
+    animation: flyBird 15s linear infinite;
+    animation-delay: 0s;
+}
+
+.bird2 {
+    top: 160px;
+    left: -80px;
+    animation: flyBird 15s linear infinite;
+    animation-delay: 7s;
+}
+
+@keyframes flyBird {
+    0% { transform: translateX(0) rotate(45deg); }
+    100% { transform: translateX(calc(100vw + 50px)) rotate(45deg); }
+}
+
+.total-countdown-box {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    background-color: rgba(139, 69, 19, 0.8);
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    z-index: 100;
+    box-sizing: border-box;
+}
 
 .total-countdown-box p {
-  margin: 4px 0;
-  font-weight: bold;
+    margin: 4px 0;
+    font-weight: bold;
 }
 
-
+.summer-animation {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: 5;
+}
 
 .confetti-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    overflow: hidden;
 }
 
 .confetti {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  opacity: 0.8;
-  animation: confetti-fall 4s linear infinite;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    opacity: 0.8;
+    animation: confetti-fall 4s linear infinite;
 }
 
 @keyframes confetti-fall {
-  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
 }
 
-.footer-links-container {
-  position: relative;
-  bottom: 20px;
-  left: 20px;
-  z-index: 100;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  padding: 20px;
-}
-.footer-link {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            color: white;
-            text-decoration: none;
-            font-size: 1rem;
-            padding: 5px 10px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 5px;
-            z-index: 100;
-            transition: background-color 0.3s ease;
-        }
-
-        .footer-link:hover {
-            background-color: rgba(0, 0, 0, 0.7);
-        }
 /* Mobil optimalizálás */
-@media screen and (max-width: 1000px) {
-    /* ... (egyéb meglévő szabályok) ... */
-
-    .footer-link {
-        font-size: 2.9rem; /* Nagyobb betűméret */
-        padding: 10px 15px; /* Nagyobb belső tér */
-        gap: 0.5em; /* keep gap proportional */
+@media screen and (max-width: 600px) {
+    #counter {
+        padding: 20px 30px;
+        font-size: 2rem;
     }
 
-    .footer-link img {
-        height: 1.05em; /* scale with larger text */
+    #countdown-box {
+        font-size: 1rem;
+        padding: 15px 20px;
     }
 
-    .footer-link:hover {
-        background-color: rgba(0, 0, 0, 0.7);
+    .hourglass {
+        width: 40px;
+        height: 70px;
     }
-}í
-    
+
+    .sun {
+        width: 100px;
+        height: 100px;
+        top: 20px;
+        right: 20px;
+    }
+
+    .cloud1 {
+        width: 160px;
+        height: 90px;
+        top: 150px;
+        left: -180px;
+    }
+
+    .cloud2 {
+        width: 200px;
+        height: 110px;
+        top: 220px;
+        left: -230px;
+    }
+
+    .bird {
+        width: 25px;
+        height: 25px;
+        border-top: 4px solid white;
+        border-left: 4px solid white;
+    }
+
+    .bird1 {
+        top: 300px;
+        left: -80px;
+    }
+
+    .bird2 {
+        top: 240px;
+        left: -120px;
+    }
+
+    .total-countdown-box {
+        font-size: 10px;
+        padding: 13px;
+        bottom: 20px;
+        right: 10px;
+    }
+}
+
 #remaining-break-box {
     margin-top: 20px;
     background-color: rgba(255, 255, 255, 0.25);
@@ -234,10 +322,82 @@ body {
     box-sizing: border-box;
 }
 
-/* mobil */
+/* Mobil */
 @media screen and (max-width: 600px) {
     #remaining-break-box {
         font-size: 1.2rem;
         padding: 15px 20px;
+    }
+}
+
+/* Hivatkozás stílusa (frissítve: ikon kezelése és alap elrendezés) */
+.footer-links-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 100;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+}
+
+.footer-link {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 5px 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+}
+
+.footer-link img {
+    display: inline-block;
+    width: auto;
+    height: 1.1em;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.footer-link:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Mobil nézet: 900px alatt egymás alá, balra igazítva */
+@media screen and (max-width: 900px) {
+    .footer-links-container {
+        position: fixed;
+        left: 10px;
+        bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+        z-index: 200;
+        box-sizing: border-box;
+        max-height: calc(300px);
+        overflow-y: auto;
+        width: auto;
+        max-width: 2400px;
+        padding: 6px;
+        background: rgba(0,0,0,0.15);
+        border-radius: 6px;
+    }
+
+    .footer-link {
+        font-size: 0.9rem;
+        padding: 6px 8px;
+        width: 100%;
+        box-sizing: border-box;
+        justify-content: flex-start;
+    }
+
+    .footer-link img {
+        height: 1.2em;
+        width: auto;
     }
 }
