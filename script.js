@@ -3,28 +3,24 @@ const detailedEl = document.getElementById('detailed-countdown');
 let confettiInterval = null;
 let confettiCleanupTimeout = null;
 
-const MAX_ACTIVE_CONFETTI = 120;
-const CONFETTI_ANIMATION_DURATION = 4000;
-const CONFETTI_REGEN_RATE = 100;
+// Új konstansok a teljesítmény javítására
+const MAX_ACTIVE_CONFETTI = 120; // Maximum ennyi konfetti elem lesz egyszerre a DOM-ban
+const CONFETTI_ANIMATION_DURATION = 4000; // A CSS animáció időtartama (4s)
+const CONFETTI_REGEN_RATE = 100; // Milyen gyakran próbáljunk újraaktiválni egy konfettit (ms)
 
-let confettiPool = [];
-let activeConfettiCount = 0;
+let confettiPool = []; // A konfetti elemek tárolója
+let activeConfettiCount = 0; // Aktív konfetti elemek számlálója
 
 function getTargetDate() {
     const now = new Date();
-    // 2025. október 23.
+    // 2025. október 23. (Az őszi szünet kezdetének dátuma)
     let target = new Date(now.getFullYear(), 9, 23); // Month is 0-indexed (October is 9)
 
-    // If today is past the target date for this year, set it for next year
+    // Ha ma már elmúlt október 23., akkor a következő év október 23.
     if (now > target) {
         target = new Date(now.getFullYear() + 1, 9, 23);
     }
     return target;
-}
-
-// Format numbers: currently return plain string without thousands separators
-function formatNumber(n) {
-    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
 function getMonthDiff(startDate, endDate) {
@@ -36,13 +32,64 @@ function getMonthDiff(startDate, endDate) {
         tempDate.setDate(tempDate.getDate() + currentMonthLength);
         months++;
     }
+
     return months - 1;
 }
 
 function getRandomColor() {
-    // Autumn colors
+    // Őszi színek (narancs, barna, vörös árnyalatok)
     const colors = ["#FF4500", "#FF8C00", "#DAA520", "#8B4513", "#A0522D", "#B22222"];
     return colors[Math.floor(Math.random() * colors.length)];
+}
+
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+// ÚJ segédfüggvény: két időpont közötti másodpercek, hétvégéket és szüneteket kihagyva
+function getWeekdaySecondsBetween(startDate, endDate) {
+    let totalMs = 0;
+    let cur = new Date(startDate);
+    
+    // Ünnepnapok (Példák, 2025/2026-ra szabva - A hónap 0-indexelt)
+    const holidays = [
+        new Date(2025, 0, 1),   // Újév napja
+        new Date(2025, 3, 21),  // Húsvét hétfő
+        new Date(2025, 4, 1),   // Munka ünnepe
+        new Date(2025, 5, 9),   // Pünkösd hétfő
+        new Date(2025, 7, 20),  // Államalapítás ünnepe
+        new Date(2025, 9, 23),  // Október 23. (A szünet kezdete)
+        new Date(2025, 10, 1),  // Mindenszentek (A szünetben van)
+    ];
+
+    // Iskolai szünetek (Az őszi szünet a fókuszban)
+    const schoolBreaks = [
+        // Őszi szünet: Október 23. → November 3. (A szünet kezdete-vége a hivatalos menetrend szerint)
+        // Mivel a visszaszámláló Október 23-ig számol, a szünetet be kell tenni
+        { start: new Date(2025, 9, 23), end: new Date(2025, 10, 3) }, 
+    ];
+
+    while (cur < endDate) {
+        let next = new Date(cur.getFullYear(), cur.getMonth(), cur.getDate() + 1, 0, 0, 0, 0);
+        if (next > endDate) next = new Date(endDate);
+
+        const day = cur.getDay(); // 0 = Sunday, 6 = Saturday
+        
+        // Ellenőrizzük, hogy a jelenlegi nap ünnepnap-e
+        const isHoliday = holidays.some(holiday => holiday.toDateString() === cur.toDateString());
+        
+        // Ellenőrizzük, hogy a jelenlegi nap iskolai szünetben van-e
+        const isSchoolBreak = schoolBreaks.some(breakPeriod => cur >= breakPeriod.start && cur < breakPeriod.end);
+
+        // Csak hétköznap (Hétfő-Péntek) számít, ha nem ünnep és nincs szünet
+        if (day !== 0 && day !== 6 && !isHoliday && !isSchoolBreak) {
+            totalMs += (next - cur); 
+        }
+
+        cur = next; 
+    }
+
+    return Math.floor(totalMs / 1000); // Visszatérünk az eltelt munkanapi másodpercekkel
 }
 
 function initConfettiPool() {
@@ -72,7 +119,7 @@ function activateConfetti() {
         confetti.style.backgroundColor = getRandomColor();
 
         confetti.classList.remove('confetti');
-        void confetti.offsetWidth;
+        void confetti.offsetWidth; 
         confetti.classList.add('confetti');
 
         activeConfettiCount++;
@@ -117,16 +164,22 @@ function updateMainCounter(target) {
     const now = new Date();
     const diffInSeconds = Math.floor((target - now) / 1000);
 
-    // Define the break period (October 23 to November 2 for Autumn)
+    // Őszi szünet időtartama: Október 23. → November 3. (következő év)
     const breakStart = new Date(now.getFullYear(), 9, 23); // October 23
-    const breakEnd = new Date(now.getFullYear(), 10, 3); // November 3 (exclusive)
+    let breakEnd = new Date(now.getFullYear(), 10, 3); // November 3 (exclusive)
+    
+    // Ha a szünet már elmúlt az aktuális évben, akkor a következő évre kell beállítani
+    if (now > breakEnd) {
+        breakStart.setFullYear(now.getFullYear() + 1);
+        breakEnd.setFullYear(now.getFullYear() + 1);
+    }
 
     const isBreak = (now >= breakStart && now < breakEnd);
 
     if (isBreak) {
         counterEl.classList.remove('fade-out');
-        counterEl.textContent = "Őszi szünet van!";
-        detailedEl.textContent = "Élvezd a vakációt! 🎉";
+        counterEl.textContent = "Őszi szünet van!"; // FELIRAT VÁLTOZÁS
+        detailedEl.textContent = "Élvezd a vakációt! 🍁"; // EMOJI VÁLTOZÁS
 
         if (!confettiInterval) {
             startConfetti();
@@ -140,11 +193,26 @@ function updateMainCounter(target) {
 
     counterEl.classList.add('fade-out');
     setTimeout(() => {
-        counterEl.innerHTML = `<span class="number">${formatNumber(diffInSeconds)}</span> másodperc van hátra az őszi szünetig!`;
+        counterEl.innerHTML = `<span class="number">${formatNumber(diffInSeconds)}</span> másodperc van hátra az őszi szünetig!`; // FELIRAT VÁLTOZÁS
         counterEl.classList.remove('fade-out');
     }, 250);
 
-    detailedEl.innerHTML = `Ez pontosan <span class="number">${formatNumber(Math.floor(diffInSeconds / (3600 * 24)))}</span> nap, <span class="number">${formatNumber(Math.floor((diffInSeconds % (3600 * 24)) / 3600))}</span> óra, <span class="number">${formatNumber(Math.floor((diffInSeconds % 3600) / 60))}</span> perc, <span class="number">${formatNumber(diffInSeconds % 60)}</span> másodperc.`;
+    // Normál (teljes idő szerint)
+    const days = Math.floor(diffInSeconds / (3600 * 24));
+    const hours = Math.floor((diffInSeconds % (3600 * 24)) / 3600);
+    const minutes = Math.floor((diffInSeconds % 3600) / 60);
+    const seconds = diffInSeconds % 60;
+
+    // Tanítási napok szerint (hétvégéket, ünnepeket, szüneteket kihagyva)
+    const teachingSeconds = getWeekdaySecondsBetween(now, target);
+    const tDays = Math.floor(teachingSeconds / (3600 * 24));
+    const tHours = Math.floor((teachingSeconds % (3600 * 24)) / 3600);
+    const tMinutes = Math.floor((teachingSeconds % 3600) / 60);
+    const tSeconds = teachingSeconds % 60;
+
+    detailedEl.innerHTML = 
+        `Ez pontosan <span class="number">${formatNumber(days)}</span> nap, <span class="number">${formatNumber(hours)}</span> óra, <span class="number">${formatNumber(minutes)}</span> perc, <span class="number">${formatNumber(seconds)}</span> másodperc.` +
+        `<br><br>Ebből <strong> <span class="number">${formatNumber(tDays)}</span> </strong> iskolai nap.`;
 }
 
 function updateDetailedBox(target) {
@@ -152,8 +220,7 @@ function updateDetailedBox(target) {
     let timeLeft = target - now;
 
     if (timeLeft < 0) {
-        // If the target date has passed, calculate for next year's break
-        target = new Date(target.getFullYear() + 1, 9, 23); // October 23
+        target = new Date(target.getFullYear() + 1, 9, 23); // Október 23.
         timeLeft = target - now;
     }
 
@@ -174,32 +241,30 @@ function updateDetailedBox(target) {
     }
 }
 
-function updateAll() {
-    const target = getTargetDate();
-    updateMainCounter(target);
-    updateDetailedBox(target);
-}
-
-// First run and update every second
-updateAll();
-setInterval(updateAll, 1000);
-
 function getBreakEndDate() {
     const now = new Date();
-    // November 3. (exclusive)
+    // A szünet vége (November 3. 00:00:00)
     return new Date(now.getFullYear(), 10, 3);
 }
 
 function updateRemainingBreak() {
     const now = new Date();
-    const breakStart = new Date(now.getFullYear(), 9, 23);
-    const breakEnd = getBreakEndDate();
+    let breakStart = new Date(now.getFullYear(), 9, 23); // Oct 23
+    let breakEnd = new Date(now.getFullYear(), 10, 3);       // Nov 3
+
+    // Ha a szünet már elmúlt az aktuális évben, akkor a következő évre kell beállítani
+    if (now > breakEnd) {
+        breakStart.setFullYear(now.getFullYear() + 1);
+        breakEnd.setFullYear(now.getFullYear() + 1);
+    }
 
     const box = document.getElementById("remaining-break-box");
     const text = document.getElementById("remaining-break-text");
 
+    if (!box || !text) return;
+
+    // ========= SZÜNET VAN =========
     if (now >= breakStart && now < breakEnd) {
-        // ========= SZÜNET VAN =========
         box.style.display = "block"; 
 
         const diff = breakEnd - now;
@@ -211,11 +276,11 @@ function updateRemainingBreak() {
         const s = totalSeconds % 60;
 
         text.innerHTML = `
-            A szünetből még hátravan:
-            <br><span class="number">${formatNumber(d)}</span> nap,
+            A szünetből még hátravan:<br>
+            <span class="number">${formatNumber(d)}</span> nap,
             <span class="number">${formatNumber(h)}</span> óra,
             <span class="number">${formatNumber(m)}</span> perc,
-            <span class="number">${formatNumber(s)}</span> másodperc.
+            <span class="number">${formatNumber(s)}</span> mp.
         `;
 
     } else {
@@ -224,10 +289,14 @@ function updateRemainingBreak() {
     }
 }
 
-updateRemainingBreak();
+
 function updateAll() {
     const target = getTargetDate();
     updateMainCounter(target);
     updateDetailedBox(target);
-    updateRemainingBreak();   // <--- ÚJ
+    updateRemainingBreak();  // <--- ÚJ
 }
+
+// Első futtatás és frissítés másodpercenként
+updateAll();
+setInterval(updateAll, 1000);
