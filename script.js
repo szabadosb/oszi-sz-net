@@ -46,55 +46,54 @@ function formatNumber(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
-// Javított getWeekdaySecondsBetween: nincs duplikáció, dinamikusan generált ünnepek és tipikus iskolai szünetek
+// Új segédfüggvény: két időpont közötti másodpercek, hétvégéket kihagyva
 function getWeekdaySecondsBetween(startDate, endDate) {
     let totalMs = 0;
     let cur = new Date(startDate);
+    const holidays = [
+        new Date(2025, 0, 1),  // Újév – január 1.
+        new Date(2025, 2, 15), // Nemzeti ünnep – március 15.
+        new Date(2025, 4, 1),  // A munka ünnepe – május 1.
+        new Date(2025, 7, 20), // Államalapítás ünnepe – augusztus 20.
+        new Date(2025, 9, 23), // Nemzeti ünnep – október 23.
+        new Date(2025, 10, 1), // Mindenszentek – november 1.
+        new Date(2025, 11, 25), // Karácsony – december 25.
+        new Date(2025, 11, 26), // Karácsony másnapja – december 26.
 
-    const startYear = startDate.getFullYear();
-    const endYear = endDate.getFullYear();
+    ];
 
-    // Generáljuk az állandó ünnepeket az érintett évekre
-    const holidays = [];
-    for (let y = startYear - 1; y <= endYear + 1; y++) {
-        holidays.push(new Date(y, 0, 1));   // Jan 1
-        holidays.push(new Date(y, 2, 15));  // Mar 15
-        holidays.push(new Date(y, 4, 1));   // May 1
-        holidays.push(new Date(y, 7, 20));  // Aug 20
-        holidays.push(new Date(y, 9, 23));  // Oct 23
-        holidays.push(new Date(y, 10, 1));  // Nov 1
-        holidays.push(new Date(y, 11, 25)); // Dec 25
-        holidays.push(new Date(y, 11, 26)); // Dec 26
-    }
-
-    // Tipikus iskolai szünetek (évenként)
-    const schoolBreaks = [];
-    for (let y = startYear - 1; y <= endYear + 1; y++) {
-        // Nyári szünet (példa): Jun 15 - Sep 1 (end exclusive)
-        schoolBreaks.push({ start: new Date(y, 5, 15), end: new Date(y, 8, 1) });
-        // Őszi szünet: Oct 23 - Nov 3
-        schoolBreaks.push({ start: new Date(y, 9, 23), end: new Date(y, 10, 3) });
-        // Téli szünet: Dec 20 - Jan 6 (átívelő)
-        schoolBreaks.push({ start: new Date(y, 11, 20), end: new Date(y + 1, 0, 6) });
-    }
-
+    const schoolBreaks = [
+        { start: new Date(2026, 5, 23), end: new Date(2026, 8, 1) }, // Nyári szünet
+        { start: new Date(2025, 9, 23), end: new Date(2025, 10, 2) }, // Őszi szünet
+        { start: new Date(2026, 11, 12), end: new Date(2026, 0, 4) }, // Téli szünet
+        { start: new Date(2026, 3, 2), end: new Date(2026, 1, 12) }, // Tavaszi szünet
+        // Add more school breaks as needed
+    ];
+    
     while (cur < endDate) {
+        // A nap végét állítjuk be a "következő" időpontnak (második átmeneti pont)
         let next = new Date(cur.getFullYear(), cur.getMonth(), cur.getDate() + 1, 0, 0, 0, 0);
+        // Ha a következő időpont túllép a célidőn, akkor a célidőt vesszük
         if (next > endDate) next = new Date(endDate);
 
         const day = cur.getDay(); // 0 = Sunday, 6 = Saturday
-        const isHoliday = holidays.some(h => h.toDateString() === cur.toDateString());
-        const isSchoolBreak = schoolBreaks.some(b => cur >= b.start && cur < b.end);
+        
+        // Ellenőrizzük, hogy a jelenlegi nap ünnepnap-e
+        const isHoliday = holidays.some(holiday => holiday.toDateString() === cur.toDateString());
+        
+        // Ellenőrizzük, hogy a jelenlegi nap iskolai szünetben van-e
+        // Fontos: a schoolBreaks-ben a 'end' dátum exkluzív (nem tartozik bele a szünetbe)
+        const isSchoolBreak = schoolBreaks.some(breakPeriod => cur >= breakPeriod.start && cur < breakPeriod.end);
 
-        // Számítunk csak hétköznapokat, amelyek nem ünnepnapok és nem iskolai szünetek
+        // Csak hétköznap (Hétfő-Péntek) számít, ha nem ünnep és nincs szünet
         if (day !== 0 && day !== 6 && !isHoliday && !isSchoolBreak) {
-            totalMs += (next - cur);
+            totalMs += (next - cur); // Hozzáadjuk az eltelt másodperceket
         }
 
-        cur = next;
+        cur = next; // Lépünk a következő napra/időpontra
     }
 
-    return Math.floor(totalMs / 1000); // visszaadjuk másodpercekben
+    return Math.floor(totalMs / 1000); // Visszatérünk az eltelt munkanapi másodpercekkel
 }
 
 function initConfettiPool() {
