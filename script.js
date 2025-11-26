@@ -46,50 +46,55 @@ function formatNumber(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
-// ÚJ segédfüggvény: két időpont közötti másodpercek, hétvégéket és szüneteket kihagyva
+// Javított getWeekdaySecondsBetween: nincs duplikáció, dinamikusan generált ünnepek és tipikus iskolai szünetek
 function getWeekdaySecondsBetween(startDate, endDate) {
     let totalMs = 0;
     let cur = new Date(startDate);
-    
-    // Ünnepnapok (Példák, 2025/2026-ra szabva - A hónap 0-indexelt)
-    const holidays = [
-        new Date(2025, 0, 1),   // Újév napja
-        new Date(2025, 3, 21),  // Húsvét hétfő
-        new Date(2025, 4, 1),   // Munka ünnepe
-        new Date(2025, 5, 9),   // Pünkösd hétfő
-        new Date(2025, 7, 20),  // Államalapítás ünnepe
-        new Date(2025, 9, 23),  // Október 23. (A szünet kezdete)
-        new Date(2025, 10, 1),  // Mindenszentek (A szünetben van)
-    ];
 
-    // Iskolai szünetek (Az őszi szünet a fókuszban)
-    const schoolBreaks = [
-        // Őszi szünet: Október 23. → November 3. (A szünet kezdete-vége a hivatalos menetrend szerint)
-        // Mivel a visszaszámláló Október 23-ig számol, a szünetet be kell tenni
-        { start: new Date(2025, 9, 23), end: new Date(2025, 10, 3) }, 
-    ];
+    const startYear = startDate.getFullYear();
+    const endYear = endDate.getFullYear();
+
+    // Generáljuk az állandó ünnepeket az érintett évekre
+    const holidays = [];
+    for (let y = startYear - 1; y <= endYear + 1; y++) {
+        holidays.push(new Date(y, 0, 1));   // Jan 1
+        holidays.push(new Date(y, 2, 15));  // Mar 15
+        holidays.push(new Date(y, 4, 1));   // May 1
+        holidays.push(new Date(y, 7, 20));  // Aug 20
+        holidays.push(new Date(y, 9, 23));  // Oct 23
+        holidays.push(new Date(y, 10, 1));  // Nov 1
+        holidays.push(new Date(y, 11, 25)); // Dec 25
+        holidays.push(new Date(y, 11, 26)); // Dec 26
+    }
+
+    // Tipikus iskolai szünetek (évenként)
+    const schoolBreaks = [];
+    for (let y = startYear - 1; y <= endYear + 1; y++) {
+        // Nyári szünet (példa): Jun 15 - Sep 1 (end exclusive)
+        schoolBreaks.push({ start: new Date(y, 5, 15), end: new Date(y, 8, 1) });
+        // Őszi szünet: Oct 23 - Nov 3
+        schoolBreaks.push({ start: new Date(y, 9, 23), end: new Date(y, 10, 3) });
+        // Téli szünet: Dec 20 - Jan 6 (átívelő)
+        schoolBreaks.push({ start: new Date(y, 11, 20), end: new Date(y + 1, 0, 6) });
+    }
 
     while (cur < endDate) {
         let next = new Date(cur.getFullYear(), cur.getMonth(), cur.getDate() + 1, 0, 0, 0, 0);
         if (next > endDate) next = new Date(endDate);
 
         const day = cur.getDay(); // 0 = Sunday, 6 = Saturday
-        
-        // Ellenőrizzük, hogy a jelenlegi nap ünnepnap-e
-        const isHoliday = holidays.some(holiday => holiday.toDateString() === cur.toDateString());
-        
-        // Ellenőrizzük, hogy a jelenlegi nap iskolai szünetben van-e
-        const isSchoolBreak = schoolBreaks.some(breakPeriod => cur >= breakPeriod.start && cur < breakPeriod.end);
+        const isHoliday = holidays.some(h => h.toDateString() === cur.toDateString());
+        const isSchoolBreak = schoolBreaks.some(b => cur >= b.start && cur < b.end);
 
-        // Csak hétköznap (Hétfő-Péntek) számít, ha nem ünnep és nincs szünet
+        // Számítunk csak hétköznapokat, amelyek nem ünnepnapok és nem iskolai szünetek
         if (day !== 0 && day !== 6 && !isHoliday && !isSchoolBreak) {
-            totalMs += (next - cur); 
+            totalMs += (next - cur);
         }
 
-        cur = next; 
+        cur = next;
     }
 
-    return Math.floor(totalMs / 1000); // Visszatérünk az eltelt munkanapi másodpercekkel
+    return Math.floor(totalMs / 1000); // visszaadjuk másodpercekben
 }
 
 function initConfettiPool() {
@@ -250,12 +255,12 @@ function getBreakEndDate() {
 function updateRemainingBreak() {
     const now = new Date();
     let breakStart = new Date(now.getFullYear(), 9, 23); // Oct 23
-    let breakEnd = new Date(now.getFullYear(), 10, 3);       // Nov 3
+    let breakEnd = new Date(now.getFullYear(), 10, 3);   // Nov 3
 
-    // Ha a szünet már elmúlt az aktuális évben, akkor a következő évre kell beállítani
+    // Ha a szünet már elmúlt az aktuális évben, akkor a következő évre állítjuk
     if (now > breakEnd) {
-        breakStart.setFullYear(now.getFullYear() + 1);
-        breakEnd.setFullYear(now.getFullYear() + 1);
+        breakStart.setFullYear(breakStart.getFullYear() + 1);
+        breakEnd.setFullYear(breakEnd.getFullYear() + 1);
     }
 
     const box = document.getElementById("remaining-break-box");
@@ -263,9 +268,8 @@ function updateRemainingBreak() {
 
     if (!box || !text) return;
 
-    // ========= SZÜNET VAN =========
     if (now >= breakStart && now < breakEnd) {
-        box.style.display = "block"; 
+        box.style.display = "block";
 
         const diff = breakEnd - now;
         const totalSeconds = Math.floor(diff / 1000);
@@ -282,9 +286,7 @@ function updateRemainingBreak() {
             <span class="number">${formatNumber(m)}</span> perc,
             <span class="number">${formatNumber(s)}</span> mp.
         `;
-
     } else {
-        // ========= NINCS SZÜNET =========
         box.style.display = "none";
     }
 }
@@ -294,7 +296,7 @@ function updateAll() {
     const target = getTargetDate();
     updateMainCounter(target);
     updateDetailedBox(target);
-    updateRemainingBreak();  // <--- ÚJ
+    updateRemainingBreak(); // hibás whitespace eltávolítva
 }
 
 // Első futtatás és frissítés másodpercenként
